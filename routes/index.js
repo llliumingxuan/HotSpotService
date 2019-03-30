@@ -46,22 +46,26 @@ router.get('/getHotSpot.do',async (ctx,next) => {
     let res = {};
     let param = ctx.request.query;
     const {title,link,platform} = param;
+    console.log(platform);
     try {
-        //let sql = `select * from HOT_INFORMATION where ${title ? 'Title=?,' : ''}${link ? 'Link=?,' : ''}${platform ? 'Platform=?' : ''};limit 50`;
         let filterString = '';
+        let queryData = []
         if(title != null){
-            filterString+='Title=?';
+            filterString+=`Title = ?`;
+            queryData.push(title);
         }
         if(link != null){
-            filterString && (filterString+=',')
-            filterString += 'Link=?'
+            filterString && (filterString+=' and ')
+            filterString += `Link = ?`;
+            queryData.push(link)
         }
         if(platform != null){
-            filterString && (filterString+=',')
-            filterString += 'Platform=?'
+            filterString && (filterString+=' and ')
+            filterString += `Platform = ?`;
+            queryData.push(platform)
         }
         let sql = `select * from HOT_INFORMATION ${filterString ? `where ${filterString}` : ''} limit 50`;
-        let result = await query(sql,[title,link,platform]).then(queryResult=>{
+        let result = await query(sql,queryData).then(queryResult=>{
             return queryResult
         }).catch(err=>{
             res = failure(err);
