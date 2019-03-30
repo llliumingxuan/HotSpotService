@@ -58,7 +58,7 @@ router.get('/getHotSpot.do',async (ctx,next) => {
         }
         if(platform != null){
             filterString && (filterString+=',')
-            filterString += 'platform=?'
+            filterString += 'Platform=?'
         }
         let sql = `select * from HOT_INFORMATION ${filterString ? `where ${filterString}` : ''} limit 50`;
         let result = await query(sql,[title,link,platform]).then(queryResult=>{
